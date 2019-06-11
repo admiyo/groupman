@@ -1,0 +1,6 @@
+admins:x:1000:anne,prithi
+test:x:5000:jwilliams,bob
+webdev:x:5001:jwilliams,arthur,prithi
+dba:x:5002:randy,pat,andre
+network:x:5003:mindy,frieda,karl
+
