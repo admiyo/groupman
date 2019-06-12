@@ -11,6 +11,7 @@ def parse_file():
             break
         record = parse_line(line)
         groups[record['group']] = record
+    fd.close()
     return groups
 
 def parse_line(line):
@@ -39,6 +40,7 @@ def parse_group_file(path):
             break
         group = Group(line)
         groups.append(group)
+    fd.close()
 
 class Group(object):
     def __init__(self, line):
