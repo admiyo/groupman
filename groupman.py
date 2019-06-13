@@ -1,36 +1,7 @@
 #!/usr/bin/python3
 
 
-def parse_file():
-    fd = open("build/group","rt")
-    groups=dict()
-
-    while(True):
-        line = fd.readline()
-        if line == '\n':
-            break
-        record = parse_line(line)
-        groups[record['group']] = record
-    fd.close()
-    return groups
-
-def parse_line(line):
-    data = line.split(':')
-    group=data[0]
-    password=data[1]
-    gid=data[2]
-    users=data[3].split('\n')[0].split(',')
-
-    record = {
-         'group': group,
-         'gid': gid,
-         'password': password,
-         'users': users
-    }
-    return record
-
-
-def parse_group_file(path):
+def parse_group_file(path):    
     fd = open(path,"rt")
     groups=[]
 
@@ -41,6 +12,7 @@ def parse_group_file(path):
         group = Group(line)
         groups.append(group)
     fd.close()
+    return GroupMan(groups)
 
 class Group(object):
     def __init__(self, line):
@@ -52,8 +24,12 @@ class Group(object):
           
 
 class GroupMan():
-
     def __init__(self, groups):
+        self.group_by_name = dict()
+        self.group_by_id = dict()
+        for group in groups:
+            self.group_by_name[group.name] = group
+            self.group_by_id[group.gid] = group
         self.groups = groups 
 
 

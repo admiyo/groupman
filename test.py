@@ -20,14 +20,13 @@ class TestGroupManager(unittest.TestCase):
             pass
         copyfile("data/group","build/group")
 
-    def test_parse(self):
-        records = groupman.parse_file()
-        self.assertEqual(5, len(records))
-        self.assertEqual('admins', records['admins']['group'] )
-        self.assertEqual(2, len(records['admins']['users']))
 
     def test_parse_groups(self):
         manager = groupman.parse_group_file("build/group")
+        self.assertEqual(5, len(manager.groups))
+        self.assertEqual('admins', manager.group_by_name['admins'].name )
+        self.assertEqual('test', manager.group_by_id['5000'].name )
+        self.assertEqual(2, len(manager.group_by_name['admins'].users))
 
 
 if __name__  == '__main__':
