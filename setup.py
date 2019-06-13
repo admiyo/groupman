@@ -8,5 +8,4 @@ setup(name='Distutils',
       author='Adam Young',
       author_email='adam@younglogic.com',
       url='https://www.younglogic.com/',
-      packages=['groupman'],
-     )
+      packages=['groupman'])
