@@ -69,6 +69,37 @@ class TestGroupManager(unittest.TestCase):
         str_val = manager.to_string()
         self.assertEqual("groupname:x:1:init\n", str_val)
 
+    def test_end_to_end(self):
+        manager = groupman.parse_group_file("build/group")
+        before =  manager.group_by_name["admins"].to_string()
+        self.assertEqual("admins:x:1000:anne,prithi", before)
+        manager.exec_files("data/group.d")
+        after =  manager.group_by_name["admins"].to_string()
+        self.assertEqual("admins:x:1000:adam,anne", after)
+
+    def test_execute(self):
+        group_file = "build/group"
+
+        fd = open(group_file, "rt")
+        before =  fd.readlines()
+        fd.close()
+        
+        manager = groupman.execute(group_file, "data/group.d")
+
+        fd = open(group_file, "rt")
+        after =  fd.readlines()
+        fd.close()
+        num_lines = len(before)
+        self.assertEqual(num_lines, len(after))
+        for i in range(num_lines):
+            before_line = before[i]
+            after_line = after[i]
+            if before_line.startswith("admins"):
+                assertEqual('admins:x:1000:anne,prithi\n', before_line)
+                assertEqual('admins:x:1000:adam,anne\n', after_line)
+            else:
+                assertEqual(before_line, after_line)
+        
 
 if __name__ == '__main__':
     unittest.main()

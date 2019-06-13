@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+import os
 
 def parse_group_file(path):
     fd = open(path, "rt")
@@ -13,6 +13,12 @@ def parse_group_file(path):
         groups.append(group)
     fd.close()
     return GroupMan(groups)
+
+
+def write_group_file(groupman, path):
+    fd = open(path, "wt")
+    fd.write(groupman.to_string())
+    fd.close()
 
 
 class Group(object):
@@ -37,7 +43,10 @@ class Group(object):
         if op == '+':
             self.users.add(user)
         elif op == '-':
-            self.users.remove(user)
+            try:
+                self.users.remove(user)
+            except KeyError:
+                pass
 
     def to_string(self):
         str_val = "%s:%s:%s:" % (self.name, self.password, self.gid)
@@ -63,7 +72,27 @@ class GroupMan():
             out = out + self.group_by_id[key].to_string() + "\n"
         return out
 
+    def parse_exec_file(self, execdir, groupname):
+        group = self.group_by_name.get(groupname)
+        if group is None:
+            return
+        path = execdir + "/" + groupname
+        fd = open(path, "rt")
+        for line in fd.readlines():
+            group.exec_line(line.strip())
+        fd.close()
 
+    def exec_files(self, execdir):
+        for r, d, f in os.walk(execdir):
+            for file in f:
+                self.parse_exec_file(execdir, file)
+
+def execute(groupfile, execdir):
+    manager = parse_group_file(groupfile)
+    manager.exec_files(execdir)
+    write_group_file(manager, groupfile)
+
+    
 def main():
     print("Hello")
     return 0
