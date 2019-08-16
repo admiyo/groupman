@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import os
+import sys
 
 def parse_group_file(path):
     fd = open(path, "rt")
@@ -94,7 +95,7 @@ def execute(groupfile, execdir):
 
     
 def main():
-    print("Hello")
+    execute(sys.argv[1], sys.argv[2 ])
     return 0
 
 if __name__ == '__main__':
